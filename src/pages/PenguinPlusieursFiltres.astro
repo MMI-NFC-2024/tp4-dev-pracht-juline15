@@ -1,0 +1,93 @@
+---
+import Layout from "../layouts/Layout.astro";
+import * as Plot from "@observablehq/plot";
+import penguins from "../assets/penguins.json";
+---
+
+<Layout>
+    <div class="m-5">
+        <h3 class="text-3xl m-5">Penguins avec plusieurs filtres</h3>
+        <a class="text-blue-900 my-5" href="/">Retour aux étapes</a>
+
+        <div class="flex gap-4 mb-4">
+            <div>
+                <label for="species" class="mr-2">Espèce :</label>
+                <select name="species" id="species" class="border p-1">
+                    <option value="">Toutes</option>
+                    <option value="Adelie">Adelie</option>
+                    <option value="Chinstrap">Chinstrap</option>
+                    <option value="Gentoo">Gentoo</option>
+                </select>
+            </div>
+
+            <div>
+                <label for="island" class="mr-2">Île :</label>
+                <select name="island" id="island" class="border p-1">
+                    <option value="">Toutes</option>
+                    <option value="Biscoe">Biscoe</option>
+                    <option value="Dream">Dream</option>
+                    <option value="Torgersen">Torgersen</option>
+                </select>
+            </div>
+
+            <div>
+                <label for="sex" class="mr-2">Sexe :</label>
+                <select name="sex" id="sex" class="border p-1">
+                    <option value="">Tous</option>
+                    <option value="MALE">Male</option>
+                    <option value="FEMALE">Female</option>
+                </select>
+            </div>
+        </div>
+
+        <div id="myplot" data-penguins={JSON.stringify(penguins)}></div>
+
+        <script>
+            import * as Plot from "@observablehq/plot";
+
+            const div = document.querySelector("#myplot");
+            const selectSpecies = document.querySelector("#species");
+            const selectIsland = document.querySelector("#island");
+            const selectSex = document.querySelector("#sex");
+            const penguins = JSON.parse(div.dataset.penguins);
+
+            function renderPlot() {
+                const species = selectSpecies.value;
+                const island = selectIsland.value;
+                const sex = selectSex.value;
+
+                // Filtrer les données en fonction des sélections
+                const data = penguins.filter(
+                    (p) =>
+                        (!species || p.species === species) &&
+                        (!island || p.island === island) &&
+                        (!sex || p.sex === sex),
+                );
+
+                // Vider l’ancien graphique
+                div.innerHTML = "";
+
+                // Créer le graphique
+                const plot = Plot.plot({
+                    marks: [
+                        Plot.dot(data, {
+                            x: "culmen_length_mm",
+                            y: "culmen_depth_mm",
+                            stroke: "species",
+                        }),
+                    ],
+                });
+
+                div.append(plot);
+            }
+
+            // Mettre à jour le graphique quand un filtre change
+            [selectSpecies, selectIsland, selectSex].forEach((select) =>
+                select.addEventListener("change", renderPlot),
+            );
+
+            // Afficher au chargement
+            renderPlot();
+        </script>
+    </div>
+</Layout>
