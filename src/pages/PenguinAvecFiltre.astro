@@ -1,0 +1,62 @@
+---
+import Layout from "../layouts/Layout.astro";
+import * as Plot from "@observablehq/plot";
+import penguins from "../assets/penguins.json";
+---
+
+<Layout>
+    <div class="m-5">
+        <h3 class="text-3xl my-5">Penguins avec filtre</h3>
+        <a class="text-blue-900 my-5" href="/">Retour aux étapes</a>
+        <br>
+
+        <label for="species" class="mr-2">Choisissez une espèce :</label>
+        <select name="species" id="species" class="border p-1 rounded">
+            <option value="">All species</option>
+            <option value="Adelie">Adelie</option>
+            <option value="Chinstrap">Chinstrap</option>
+            <option value="Gentoo">Gentoo</option>
+        </select>
+
+        <div id="myplot" data-penguins={JSON.stringify(penguins)}></div>
+
+        <script>
+            import * as Plot from "@observablehq/plot";
+
+            const div = document.querySelector("#myplot");
+            const selectSpecies = document.querySelector("#species");
+            const penguins = JSON.parse(div.dataset.penguins);
+
+            function renderPlot() {
+                const species = selectSpecies.value;
+
+                // Filtrer les données si une espèce est sélectionnée
+                const data = species
+                    ? penguins.filter((p) => p.species === species)
+                    : penguins;
+
+                // Vider l’ancien graphique
+                div.innerHTML = "";
+
+                // Créer le graphique
+                const plot = Plot.plot({
+                    marks: [
+                        Plot.dot(data, {
+                            x: "culmen_length_mm",
+                            y: "culmen_depth_mm",
+                            stroke: "species",
+                        }),
+                    ],
+                });
+
+                div.append(plot);
+            }
+
+            // Mettre à jour le graphique quand on change d’espèce
+            selectSpecies.addEventListener("change", renderPlot);
+
+            // Afficher le graphique au chargement
+            renderPlot();
+        </script>
+    </div>
+</Layout>
