@@ -1,0 +1,27 @@
+---
+import Layout from "../layouts/Layout.astro";
+import * as Plot from "@observablehq/plot";
+import penguins from "../assets/penguins.json";
+---
+
+<Layout>
+    <div class="m-5">
+        <h3 class="text-3xl m-5">Simple Penguin</h3>
+        <div id="myplot" data-penguins={JSON.stringify(penguins)}></div>
+
+        <script>
+            import * as Plot from "@observablehq/plot";
+
+            const div = document.querySelector("#myplot");
+            const penguins = JSON.parse(div.dataset.penguins);
+
+            const plot = Plot.dot(penguins, {
+                x: "culmen_length_mm",
+                y: "culmen_depth_mm",
+                stroke: "species",
+            }).plot();
+
+            div.append(plot);
+        </script>
+    </div>
+</Layout>
