@@ -1,0 +1,66 @@
+---
+import Layout from "../layouts/Layout.astro";
+import * as Plot from "@observablehq/plot";
+import diamonds from "../assets/diamonds.json";
+---
+
+<Layout>
+    <div class="m-5">
+        <h3 class="text-3xl my-5">Diamonds avec filtre</h3>
+        <a class="text-blue-900 my-5" href="/">Retour aux étapes</a>
+        <br />
+
+        <label for="cut" class="mr-2">Choisissez une taille (cut) :</label>
+        <select name="cut" id="cut" class="border p-1 rounded">
+            <option value="">Toutes</option>
+            <option value="Fair">Fair</option>
+            <option value="Good">Good</option>
+            <option value="Very Good">Very Good</option>
+            <option value="Premium">Premium</option>
+            <option value="Ideal">Ideal</option>
+        </select>
+
+        <div id="myplot" data-diamonds={JSON.stringify(diamonds)}></div>
+
+        <script>
+            import * as Plot from "@observablehq/plot";
+
+            const div = document.querySelector("#myplot");
+            const selectCut = document.querySelector("#cut");
+            const diamonds = JSON.parse(div.dataset.diamonds);
+
+            function renderPlot() {
+                const cut = selectCut.value;
+
+                // Filtrer si un "cut" est sélectionné
+                const data = cut
+                    ? diamonds.filter((d) => d.cut === cut)
+                    : diamonds;
+
+                // Vider l’ancien graphique
+                div.innerHTML = "";
+
+                // Créer le scatterplot carat vs price
+                const plot = Plot.plot({
+                    marks: [
+                        Plot.dot(data, {
+                            x: "carat",
+                            y: "price",
+                            stroke: "cut",
+                        }),
+                    ],
+                    x: { label: "Carat" },
+                    y: { label: "Price" },
+                });
+
+                div.append(plot);
+            }
+
+            // Mettre à jour le graphique au changement de cut
+            selectCut.addEventListener("change", renderPlot);
+
+            // Afficher au chargement
+            renderPlot();
+        </script>
+    </div>
+</Layout>
