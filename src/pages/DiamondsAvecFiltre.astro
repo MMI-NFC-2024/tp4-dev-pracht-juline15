@@ -32,15 +32,12 @@ import diamonds from "../assets/diamonds.json";
             function renderPlot() {
                 const cut = selectCut.value;
 
-                // Filtrer si un "cut" est sélectionné
                 const data = cut
                     ? diamonds.filter((d) => d.cut === cut)
                     : diamonds;
 
-                // Vider l’ancien graphique
                 div.innerHTML = "";
 
-                // Créer le scatterplot carat vs price
                 const plot = Plot.plot({
                     marks: [
                         Plot.dot(data, {
@@ -56,10 +53,8 @@ import diamonds from "../assets/diamonds.json";
                 div.append(plot);
             }
 
-            // Mettre à jour le graphique au changement de cut
             selectCut.addEventListener("change", renderPlot);
 
-            // Afficher au chargement
             renderPlot();
         </script>
     </div>

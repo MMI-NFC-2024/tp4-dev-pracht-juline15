@@ -6,16 +6,15 @@ import penguins from "../assets/penguins.json";
 ---
 
 <Layout>
-  <h1 class="text-2xl m-5">Test Astro et Plot (Observablehq)</h1>
+  <h1 class="text-2xl m-5 my-10">Test Astro et Plot (Observablehq)</h1>
 
-  <h2 class="text-xl m-5 text-pink-700">Penguins</h2>
+  <a class="m-5 my-10 border-2 border-green-700 p-2 rounded-full" href="/simple"
+    >Simple</a
+  >
+
+  <p class="text-xl m-5 mt-10 text-pink-700">Penguins</p>
   <nav>
     <ul class="flex gap-2 m-5">
-      <li>
-        <a class="border-2 border-pink-700 p-2 rounded-full" href="/simple"
-          >Simple</a
-        >
-      </li>
       <li>
         <a
           class="border-2 border-pink-700 p-2 rounded-full"
@@ -37,9 +36,7 @@ import penguins from "../assets/penguins.json";
     </ul>
   </nav>
 
-  <br />
-
-  <h2 class="text-xl m-5 text-purple-800">Diamonds</h2>
+  <p class="text-xl m-5 mt-10 text-purple-800">Diamonds</p>
   <nav>
     <ul class="flex gap-2 m-5">
       <li>
@@ -58,6 +55,30 @@ import penguins from "../assets/penguins.json";
         <a
           class="border-2 border-purple-800 p-2 rounded-full"
           href="/DiamondsPlusieursFiltres">Diamonds avec plusieurs filtres</a
+        >
+      </li>
+    </ul>
+  </nav>
+
+  <p class="text-xl m-5 mt-10 text-blue-900">Weather</p>
+  <nav>
+    <ul class="flex gap-2 m-5">
+      <li>
+        <a
+          class="border-2 border-blue-900 p-2 rounded-full"
+          href="/simpleWeather">Simple Weather</a
+        >
+      </li>
+      <li>
+        <a
+          class="border-2 border-blue-900 p-2 rounded-full"
+          href="/WeatherAvecFiltre">Weather avec filtre</a
+        >
+      </li>
+      <li>
+        <a
+          class="border-2 border-blue-900 p-2 rounded-full"
+          href="/WeatherPlusieursFiltres">Weather avec plusieurs filtres</a
         >
       </li>
     </ul>

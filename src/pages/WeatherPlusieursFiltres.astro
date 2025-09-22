@@ -1,0 +1,100 @@
+---
+import Layout from "../layouts/Layout.astro";
+import weather from "../assets/weather.json";
+---
+
+<Layout>
+    <div class="m-5">
+        <h3 class="text-3xl my-5">Weather avec plusieurs filtres</h3>
+        <a class="text-blue-900 my-5" href="/">Retour aux étapes</a>
+
+        <div class="flex gap-4 mb-4">
+            <div>
+                <label for="location" class="mr-2">Lieu :</label>
+                <select name="location" id="location" class="border p-1">
+                    <option value="">Tous</option>
+                    <option value="New York">New York</option>
+                    <option value="Seattle">Seattle</option>
+                </select>
+            </div>
+
+            <div>
+                <label for="weather" class="mr-2">Météo :</label>
+                <select name="weather" id="weather" class="border p-1">
+                    <option value="">Toutes</option>
+                    <option value="sun">sun</option>
+                    <option value="rain">rain</option>
+                    <option value="fog">fog</option>
+                    <option value="snow">snow</option>
+                    <option value="drizzle">drizzle</option>
+                </select>
+            </div>
+
+            <div>
+                <label for="wind" class="mr-2">Vent :</label>
+                <select name="wind" id="wind" class="border p-1">
+                    <option value="">Tous</option>
+                    <option value="0-10">0-10 km/h</option>
+                    <option value="10-20">10-20 km/h</option>
+                    <option value="20+">20+ km/h</option>
+                </select>
+            </div>
+        </div>
+
+        <div id="myplot" data-weather={JSON.stringify(weather)}></div>
+
+        <script>
+            import * as Plot from "@observablehq/plot";
+
+            const div = document.querySelector("#myplot");
+            const selectLocation = document.querySelector("#location");
+            const selectWeather = document.querySelector("#weather");
+            const selectWind = document.querySelector("#wind");
+            const weatherData = JSON.parse(div.dataset.weather);
+
+            function renderPlot() {
+                const location = selectLocation.value;
+                const weatherType = selectWeather.value;
+                const windRange = selectWind.value;
+
+                const data = weatherData.filter((d) => {
+                    const windValue = d.wind;
+                    let windMatch = true;
+                    if (windRange) {
+                        if (windRange === "0-10") windMatch = windValue <= 10;
+                        else if (windRange === "10-20")
+                            windMatch = windValue > 10 && windValue <= 20;
+                        else if (windRange === "20+")
+                            windMatch = windValue > 20;
+                    }
+
+                    return (
+                        (!location || d.location === location) &&
+                        (!weatherType || d.weather === weatherType) &&
+                        windMatch
+                    );
+                });
+
+                div.innerHTML = "";
+
+                const plot = Plot.plot({
+                    marks: [
+                        Plot.dot(data, {
+                            x: "date",
+                            y: "temp_max",
+                            stroke: "weather",
+                        }),
+                    ],
+                });
+
+                div.append(plot);
+            }
+
+            [selectLocation, selectWeather, selectWind].forEach((sel) =>
+                sel.addEventListener("change", renderPlot),
+            );
+
+            renderPlot();
+        </script>
+    </div>
+</Layout>

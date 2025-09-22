@@ -1,0 +1,51 @@
+---
+import Layout from "../layouts/Layout.astro";
+import weather from "../assets/weather.json";
+---
+
+<Layout>
+    <div class="m-5">
+        <h3 class="text-3xl my-5">Weather avec filtre</h3>
+        <a class="text-blue-900 my-5" href="/">Retour aux étapes</a>
+        <br />
+
+        <label for="location" class="mr-2">Choisissez un lieu :</label>
+        <select name="location" id="location" class="border p-1 rounded">
+            <option value="">Tous les lieux</option>
+            <option value="New York">New York</option>
+            <option value="Seattle">Seattle</option>
+        </select>
+
+        <div id="myplot" data-weather={JSON.stringify(weather)}></div>
+
+        <script>
+            import * as Plot from "@observablehq/plot";
+
+            const div = document.querySelector("#myplot");
+            const selectLocation = document.querySelector("#location");
+            const weatherData = JSON.parse(div.dataset.weather);
+
+            function renderPlot() {
+                const location = selectLocation.value;
+
+                const data = location
+                    ? weatherData.filter((d) => d.location === location)
+                    : weatherData;
+
+                div.innerHTML = "";
+
+                const plot = Plot.dot(data, {
+                    x: "date",
+                    y: "temp_max",
+                    stroke: "weather",
+                }).plot();
+
+                div.append(plot);
+            }
+
+            selectLocation.addEventListener("change", renderPlot);
+
+            renderPlot();
+        </script>
+    </div>
+</Layout>

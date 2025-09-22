@@ -68,7 +68,6 @@ import diamonds from "../assets/diamonds.json";
                 const color = selectColor.value;
                 const clarity = selectClarity.value;
 
-                // Filtrer selon les 3 critères
                 const data = diamonds.filter(
                     (d) =>
                         (!cut || d.cut === cut) &&
@@ -76,10 +75,8 @@ import diamonds from "../assets/diamonds.json";
                         (!clarity || d.clarity === clarity),
                 );
 
-                // Vider le contenu précédent
                 div.innerHTML = "";
 
-                // Créer le scatterplot
                 const plot = Plot.plot({
                     marks: [
                         Plot.dot(data, {
@@ -95,12 +92,10 @@ import diamonds from "../assets/diamonds.json";
                 div.append(plot);
             }
 
-            // Rafraîchir à chaque changement de filtre
             [selectCut, selectColor, selectClarity].forEach((select) =>
                 select.addEventListener("change", renderPlot),
             );
 
-            // Premier affichage
             renderPlot();
         </script>
     </div>
